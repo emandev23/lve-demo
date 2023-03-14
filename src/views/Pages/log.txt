@@ -1,0 +1,236 @@
+import React from "react";
+// Chakra imports
+// import api;
+import axios from "axios";
+
+import {
+  Box,
+  Flex,
+  Button,
+  FormControl,
+  FormLabel,
+  HStack,
+  Input,
+  Icon,
+  Link,
+  Switch,
+  Text,
+  Select,
+  useColorModeValue,
+  color,
+} from "@chakra-ui/react";
+// Assets
+import { useState } from "react";
+import signInImage from "assets/img/signInImage.png";
+
+
+const Login = () => {
+  const [formInput, setFormInput] = useState({ email: "", password: "" });
+
+  const updateFormInput = (e) => {
+    e.persist();
+
+    setFormInput((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const signIn = (e) => {
+    e.preventDefault();
+
+    axios.get("/sanctum/csrf-cookie").then(() => {
+      axios.post("/login", formInput).then((response) => {
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          console.log("sucess");
+        }
+      });
+    });
+  };
+
+const bgForm = useColorModeValue("white", "red.600");
+// const [email, setEmail] = useState("");
+// const [password,setPassword] = useState("");
+// const [errorMail, setErrorMail] = useState();
+// const [errorPass,setErrorPass] = useState();
+
+// // const titleColor = useColorModeValue("gray.700", "red.600");
+// // const textColor = useColorModeValue("gray.700", "white");
+// // const colorIcons = useColorModeValue("red.600", "white");
+// // const bgIcons = useColorModeValue("trasnparent", "red.600");
+// // const bgIconsHover = useColorModeValue("gray.50", "whiteAlpha.100");
+// const handleLogin = async (event) => {
+//   event.preventDefault();
+//   // login({email, password});
+
+//   try {
+//     // await axios.post("/login", { email, password });
+//     await axios({
+//       url: "api/login",
+//       method: "post",
+//       data: { email, password },
+//       xsrfHeaderName: "X-XSRF-TOKEN",
+//     }).then((res) => {
+//       if (res.data.message == "connecteed") {
+//         setEmail("");
+//         setPassword("");
+//         history.push("/");
+//       } else {
+//         setErrorMail("Invalid email");
+//         setErrorPass("Invalid password");
+//         // setErrors(e.response.data.errors);
+//       }
+//     });
+//   } catch (e) {
+//     console.log(e);
+//   }
+
+  return (
+    <Flex
+      direction="column"
+      alignSelf="center"
+      justifySelf="center"
+      overflow="hidden"
+    >
+      <Box
+        position="absolute"
+        minH={{ base: "70vh", md: "50vh" }}
+        maxH={{ base: "70vh", md: "50vh" }}
+        w={{ md: "calc(100vw - 50px)" }}
+        maxW={{ md: "calc(100vw - 50px)" }}
+        left="0"
+        right="0"
+        bgRepeat="no-repeat"
+        overflow="hidden"
+        zIndex="-1"
+        top="0"
+        bgImage={signInImage}
+        bgSize="cover"
+        mx={{ md: "auto" }}
+        mt={{ md: "14px" }}
+        borderRadius={{ base: "0px", md: "20px" }}
+      >
+        <Box w="100vw" h="100vh" bg="red.600" opacity="0.8"></Box>
+      </Box>
+      <Flex
+        direction="column"
+        textAlign="center"
+        justifyContent="center"
+        align="center"
+        mt="125px"
+        mb="30px"
+      ></Flex>
+      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
+        <Flex
+          direction="column"
+          w="445px"
+          background="transparent"
+          borderRadius="15px"
+          p="40px"
+          mx={{ base: "100px" }}
+          bg={bgForm}
+          boxShadow={useColorModeValue(
+            "0px 5px 14px rgba(0, 0, 0, 0.05)",
+            "unset"
+          )}
+        >
+          <FormControl onSubmit={signIn}>
+            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+              Email
+            </FormLabel>
+            <Input
+              variant="auth"
+              fontSize="sm"
+              ms="4px"
+              type="email"
+              // value={email}
+              onChange={updateFormInput}
+              placeholder="Your email address"
+              mb="24px"
+              size="lg"
+            />
+            {/* <span
+              style={{
+                color: color === "red" ? "red" : "red",
+                marginLeft: "260px",
+              }}
+            >
+              {errorMail}
+            </span> */}
+
+            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+              Password
+            </FormLabel>
+            <Input
+              variant="auth"
+              fontSize="sm"
+              ms="4px"
+              type="password"
+              // value={password}
+              onChange={updateFormInput}
+              placeholder="Your password"
+              mb="24px"
+              size="lg"
+            />
+            {/* <span
+              style={{
+                color: color === "red" ? "red" : "red",
+                marginLeft: "230px",
+              }}
+            >
+              {errorPass}
+            </span> */}
+
+            {/* <FormLabel
+              id="error"
+              ms="4px"
+              fontSize="sm"
+              fontWeight="normal"
+            ></FormLabel> */}
+            <FormControl display="flex" alignItems="center" mb="24px">
+              {/* <Switch id="remember-login" colorScheme="red" me="10px" />
+              <FormLabel htmlFor="remember-login" mb="0" fontWeight="normal">
+                Remember me
+              </FormLabel> */}
+            </FormControl>
+            <Button
+              bg="red.600"
+              fontSize="15px"
+              variant="dark"
+              fontWeight="bold"
+              w="100%"
+              h="45"
+              mb="24px"
+              onClick={signIn}
+            >
+              LOGIN
+            </Button>
+          </FormControl>
+          <Flex
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            maxW="100%"
+            mt="0px"
+          >
+            {/* <Text color={textColor} fontWeight='medium'>
+              Already have an account?
+              <Link
+                color={titleColor}
+                as='span'
+                ms='5px'
+                href='#'
+                fontWeight='bold'>
+                Sign In
+              </Link>
+            </Text> */}
+          </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
+  );
+};
+
+export default Login;
