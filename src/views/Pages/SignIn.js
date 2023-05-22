@@ -1,6 +1,6 @@
 import React from "react";
 // Chakra imports
-import axios from "axios";
+import axios from "./api/axios";
 import {
   Box,
   Flex,
@@ -21,32 +21,23 @@ function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const history = useHistory();
-
-  const submit = async (e) => {
+  const csrf = () => axios.get("/sanctum/csrf-cookie");
+  const handleLogin = async (e) => {
     e.preventDefault();
-
+    await csrf();
     try {
-      const { data } = await axios.post(
-        "http://localhost:8000/login",
-        {
+      await axios
+        .post("/login", {
           email,
           password,
-        },
-        { withCredentials: true }
-      );
-
-      console.log("Server response:", data);
-
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${data["token"]}`;
-      if (data.error === "Invalid credentials") {
-        history.push("/signin");
-      } else {
-        history.push("/admin/dashboard");
-      }
+        })
+        .then((data) => {
+          setEmail("");
+          setPassword("");
+          history.push("/admin/dashboard");
+        });
     } catch (error) {
-      console.error("Error:", error);
+      console.log(error);
     }
   };
   return (
@@ -98,7 +89,7 @@ function SignIn() {
             "unset"
           )}
         >
-          <FormControl onSubmit={submit}>
+          <FormControl onSubmit={handleLogin}>
             <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
               Email
             </FormLabel>
@@ -107,6 +98,7 @@ function SignIn() {
               fontSize="sm"
               ms="4px"
               type="email"
+              value={email}
               placeholder="Your email address"
               onChange={(e) => setEmail(e.target.value)}
               mb="24px"
@@ -120,6 +112,7 @@ function SignIn() {
               fontSize="sm"
               ms="4px"
               type="password"
+              value={password}
               placeholder="Your password"
               mb="24px"
               size="lg"
@@ -140,7 +133,7 @@ function SignIn() {
               h="45"
               mb="24px"
               type="submit"
-              onClick={submit}
+              onClick={handleLogin}
             >
               SIGN IN
             </Button>

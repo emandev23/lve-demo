@@ -2,7 +2,7 @@
 import { BellIcon } from "@chakra-ui/icons";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../../views/Pages/api/axios";
 import { useHistory } from "react-router-dom";
 
 // Chakra Imports
@@ -50,7 +50,8 @@ export default function HeaderLinks(props) {
   // }, []);
 
   const logout = async () => {
-    await axios.post("logOut", {}, { withCredentials: true });
+    console.log("is logout");
+    await axios.post("logout", {}, { withCredentials: true });
     history.push("/login");
   };
 
@@ -84,7 +85,7 @@ export default function HeaderLinks(props) {
       alignItems="center"
       flexDirection="row"
     >
-       {/* <Text display={{ sm: "none", md: "flex" }}>{name}</Text> */}
+      {/* <Text display={{ sm: "none", md: "flex" }}>{name}</Text> */}
       <SearchBar me="18px" />
       <NavLink to="/auth/signin">
         <Button

@@ -124,7 +124,7 @@
 // export default dashRoutes;
 
 // import
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import Dashboard from "views/Dashboard/Dashboard.js";
 import Tables from "views/Dashboard/Tables.js";
 import Billing from "views/Dashboard/Billing.js";
@@ -132,7 +132,7 @@ import Profile from "views/Dashboard/Profile.js";
 import SignIn from "views/Pages/SignIn.js";
 import PerfHier from "views/Dashboard/PerfHier";
 import Activity from "views/Dashboard/Activity";
-import axios from "axios";
+import axios from "./views/Pages/api/axios";
 import Cookies from "js-cookie";
 import {
   HomeIcon,
@@ -143,18 +143,25 @@ import {
   RocketIcon,
   SupportIcon,
 } from "components/Icons/Icons";
+// const [user, setUser] = useState("");
+// const getUserRole = async () => {
+//   const csrftoken = Cookies.get("XSRF-TOKEN");
+//   axios.defaults.headers.common["X-CSRF-TOKEN"] = csrftoken;
+//   console.log(axios.defaults.headers.common["X-CSRF-TOKEN"]);
+//   axios
+//     .post("http://localhost:8000/api/user/", { withCredentials: true })
+//     .then((data) => {
+//       console.log(data);
+//     });
+// };
+// getUserRole();
 
-const getUserRole = async () => {
-  const csrftoken = Cookies.get("XSRF-TOKEN");
-  axios.defaults.headers.common["X-CSRF-TOKEN"] = csrftoken;
-  console.log(axios.defaults.headers.common["X-CSRF-TOKEN"]);
-  axios
-    .post("http://localhost:8000/user/", { withCredentials: true })
-    .then((data) => {
-      console.log(data);
-    });
+const getUser = async () => {
+  const { data } = await axios.get("/api/user");
+  // setUser(data);
+  // console.log(user);
 };
-getUserRole();
+getUser();
 var dashRoutes = [
   {
     path: "/dashboard",
